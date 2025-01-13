@@ -1,0 +1,165 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+input {
+  display: inline-flex;
+  padding: 0.5rem var(--input-padding--lg, 0.75rem);
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 0.3125rem;
+  border: 1px solid var(--neutrals-blue-gray-200, #bcccdc);
+  background: var(--neutrals-white-pure, #fff);
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  font-family: Inter;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.counter-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scroll-button {
+  display: flex;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  padding: 4px 0;
+}
+
+.drag-indicator {
+  position: absolute;
+  width: 2px;
+  height: 20px; /* MAX_DRAG_DISTANCE */
+  opacity: 0;
+  transition: opacity 0.2s;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.drag-indicator.active {
+  opacity: 1;
+}
+
+#upperBound {
+  background: #07a737;
+  bottom: 100%;
+}
+
+#lowerBound {
+  background: #ca1212;
+  top: 100%;
+}
+
+.scroll-icon__arrow-up,
+.scroll-icon__arrow-down {
+  transition: opacity 0.2s;
+}
+
+.scroll-icon__circle {
+  transition: transform 0.2s;
+}
+
+/* chevron component */
+.chevron-counter-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chevron {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  transition: opacity 0.2s;
+  fill: #1e75df;
+  opacity: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.chevron.active {
+  opacity: 1;
+}
+
+.chevron-up {
+  bottom: 100%;
+}
+
+.chevron-down {
+  top: 100%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+.button-counter-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.button-counter-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.button-counter-wrapper input {
+  overflow: hidden;
+  padding-right: 40px; /* Make room for buttons */
+}
+
+.button-controls {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.button-chevron {
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  fill: #1e75df;
+  background: #fff;
+  border: 1px solid #bcccdc;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-chevron-up {
+  border-radius: 0 4px 0 0;
+  border-bottom: 0;
+}
+
+.button-chevron-down {
+  border-radius: 0 0 4px 0;
+}

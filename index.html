@@ -4,178 +4,53 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scroll Counter</title>
-    <style>
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      }
-
-      input {
-        display: inline-flex;
-        padding: 0.5rem var(--input-padding--lg, 0.75rem);
-        align-items: center;
-        gap: 0.5rem;
-        flex-shrink: 0;
-        border-radius: 0.3125rem;
-        border: 1px solid var(--neutrals-blue-gray-200, #bcccdc);
-        background: var(--neutrals-white-pure, #fff);
-        box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-        font-family: Inter;
-      }
-
-      .counter-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .scroll-button {
-        display: flex;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        border: none;
-        cursor: pointer;
-        touch-action: none;
-        user-select: none;
-        padding: 4px 0;
-      }
-
-      .drag-indicator {
-        position: absolute;
-        width: 2px;
-        height: 20px; /* 2x MAX_DRAG_DISTANCE */
-        opacity: 0;
-        transition: opacity 0.2s;
-        left: 50%;
-        transform: translate(-50%);
-      }
-
-      .drag-indicator.active {
-        opacity: 1;
-      }
-
-      #upperBound {
-        background: #07a737;
-        bottom: 100%;
-      }
-
-      #lowerBound {
-        background: #ca1212;
-        top: 100%;
-      }
-
-      .scroll-icon__arrow-up,
-      .scroll-icon__arrow-down {
-        transition: opacity 0.2s;
-      }
-
-      .scroll-icon__circle {
-        transition: transform 0.2s;
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="input-scroll.js"></script>
+    <script defer src="input-chevron.js"></script>
+    <script defer src="input-buttons.js"></script>
   </head>
   <body>
-    <div class="counter-container">
-      <input type="text" id="scrollCount" value="0" readonly />
-      <div style="position: relative">
-        <div id="upperBound" class="drag-indicator"></div>
-        <svg id="scrollButton" class="scroll-button" alt="Scroll button" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle class="scroll-icon__circle" cx="12" cy="12" r="5" transform="rotate(90 12 12)" fill="#1E75DF" />
-          <path class="scroll-icon__arrow-up" d="M9 3L12 1L15 3" stroke="#1E75DF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path class="scroll-icon__arrow-down" d="M15 21L12 23L9 21" stroke="#1E75DF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <div class="flex">
+      <div class="counter-container">
+        <input type="text" id="scrollCount" value="0" readonly />
+        <div style="position: relative">
+          <div id="upperBound" class="drag-indicator"></div>
+          <svg id="scrollButton" class="scroll-button" alt="Scroll button" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle class="scroll-icon__circle" cx="12" cy="12" r="5" transform="rotate(90 12 12)" fill="#1E75DF" />
+            <path class="scroll-icon__arrow-up" d="M9 3L12 1L15 3" stroke="#1E75DF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path class="scroll-icon__arrow-down" d="M15 21L12 23L9 21" stroke="#1E75DF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <div id="lowerBound" class="drag-indicator"></div>
+        </div>
+      </div>
+
+      <div class="chevron-counter-container">
+        <input type="text" id="chevronCount" value="0" readonly />
+        <svg class="chevron chevron-up" viewBox="0 0 24 24">
+          <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
         </svg>
-        <div id="lowerBound" class="drag-indicator"></div>
+        <svg class="chevron chevron-down" viewBox="0 0 24 24">
+          <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+        </svg>
+      </div>
+
+      <div class="button-counter-container">
+        <div class="button-counter-wrapper">
+          <input type="text" id="buttonCount" value="0" readonly />
+          <div class="button-controls">
+            <button class="button-chevron button-chevron-up button-up">
+              <svg viewBox="0 0 24 24" width="16" height="16">
+                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+              </svg>
+            </button>
+            <button class="button-chevron button-chevron-down button-down">
+              <svg viewBox="0 0 24 24" width="16" height="16" style="transform: rotate(180deg)">
+                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-
-    <script>
-      const MAX_DRAG_DISTANCE = 20;
-      const button = document.getElementById("scrollButton");
-      const scrollInput = document.getElementById("scrollCount");
-      const upperBound = document.getElementById("upperBound");
-      const lowerBound = document.getElementById("lowerBound");
-      const arrowUp = document.querySelector(".scroll-icon__arrow-up");
-      const arrowDown = document.querySelector(".scroll-icon__arrow-down");
-      const circle = document.querySelector(".scroll-icon__circle");
-
-      // Set initial state
-      circle.style.transform = "translateY(0)";
-
-      let count = 0;
-      let startY = 0;
-      let currentY = 0;
-      let isActive = false;
-      let animationFrameId;
-
-      button.addEventListener("touchstart", (e) => {
-        isActive = true;
-        startY = e.touches[0].clientY;
-        currentY = startY;
-        upperBound.classList.add("active");
-        lowerBound.classList.add("active");
-        updateCount();
-      });
-
-      button.addEventListener("touchmove", (e) => {
-        if (!isActive) return;
-        currentY = e.touches[0].clientY;
-
-        if (currentY < startY) {
-          arrowDown.style.opacity = "0";
-          arrowUp.style.opacity = "1";
-          circle.style.transform = "translateY(-1px)";
-        } else {
-          arrowUp.style.opacity = "0";
-          arrowDown.style.opacity = "1";
-          circle.style.transform = "translateY(1px)";
-        }
-      });
-
-      button.addEventListener("touchend", () => {
-        isActive = false;
-        cancelAnimationFrame(animationFrameId);
-        upperBound.classList.remove("active");
-        lowerBound.classList.remove("active");
-        arrowUp.style.opacity = "1";
-        arrowDown.style.opacity = "1";
-        circle.style.transform = "translateY(0)";
-      });
-
-      function updateCount() {
-        if (!isActive) return;
-
-        const distance = Math.abs(currentY - startY);
-        const direction = startY > currentY ? 1 : -1;
-        const clampedDistance = Math.min(distance, MAX_DRAG_DISTANCE);
-
-        const percentage = clampedDistance / MAX_DRAG_DISTANCE;
-
-        let accelerationFactor;
-        if (percentage <= 0.5) {
-          // Keep ultra-precise control for first 50%
-          accelerationFactor = percentage * 0.005;
-        } else {
-          // Smoother cubic acceleration for last 50%
-          const normalizedPercentage = (percentage - 0.5) * 2; // Scale 0.5-1 to 0-1
-          accelerationFactor = Math.pow(normalizedPercentage, 3) * 0.3 + 0.0025; // Cubic curve with reduced max
-        }
-
-        const increment = accelerationFactor * 30;
-
-        if (direction > 0) {
-          count += increment;
-        } else {
-          count = Math.max(0, count - increment);
-        }
-
-        scrollInput.value = Math.floor(count);
-        animationFrameId = requestAnimationFrame(updateCount);
-      }
-    </script>
   </body>
 </html>
