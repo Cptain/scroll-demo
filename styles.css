@@ -38,7 +38,7 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0;
 }
 
 .scroll-button {
@@ -56,7 +56,7 @@ body {
 .drag-indicator {
   position: absolute;
   width: 2px;
-  height: 20px; /* MAX_DRAG_DISTANCE */
+  height: 80px; /* MAX_DRAG_DISTANCE */
   opacity: 0;
   transition: opacity 0.2s;
   left: 50%;
@@ -64,7 +64,7 @@ body {
 }
 
 .drag-indicator.active {
-  opacity: 1;
+  opacity: 0;
 }
 
 #upperBound {
@@ -80,6 +80,7 @@ body {
 .scroll-icon__arrow-up,
 .scroll-icon__arrow-down {
   transition: opacity 0.2s;
+  cursor: pointer;
 }
 
 .scroll-icon__circle {
