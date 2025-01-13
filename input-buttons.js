@@ -2,24 +2,33 @@ const buttonCount = document.getElementById("buttonCount");
 const buttonUp = document.querySelector(".button-up");
 const buttonDown = document.querySelector(".button-down");
 let buttonValue = 0;
-
-// Single click handlers
-buttonUp.addEventListener('click', (e) => {
-  e.preventDefault();
-  buttonValue++;
-  buttonCount.value = buttonValue;
-});
-
-buttonDown.addEventListener('click', (e) => {
-  e.preventDefault();
-  buttonValue = Math.max(0, buttonValue - 1);
-  buttonCount.value = buttonValue;
-});
-
-// Long press handlers
+let holdStartTime = 0;
 let holdInterval;
+let isHolding = false;
 
-function startIncrement(isUp) {
+function getAcceleration(holdTime) {
+  const SLOW_PHASE = 1000;
+  const BASE_SPEED = 1;
+  
+  if (holdTime <= SLOW_PHASE) {
+    return BASE_SPEED;
+  } else {
+    const timeAfterSlow = holdTime - SLOW_PHASE;
+    return BASE_SPEED + Math.pow(timeAfterSlow / 500, 3);
+  }
+}
+
+function handleTap(isUp) {
+  if (isUp) {
+    buttonValue++;
+  } else {
+    buttonValue = Math.max(0, buttonValue - 1);
+  }
+  buttonCount.value = buttonValue;
+}
+
+function handleHold(isUp) {
+  isHolding = true;
   holdStartTime = Date.now();
   
   holdInterval = setInterval(() => {
@@ -27,19 +36,38 @@ function startIncrement(isUp) {
     const increment = getAcceleration(holdTime);
     
     if (isUp) {
-      buttonValue += increment;
+      buttonValue = Math.floor(buttonValue + increment);
     } else {
-      buttonValue = Math.max(0, buttonValue - increment);
+      buttonValue = Math.floor(Math.max(0, buttonValue - increment));
     }
     
-    buttonCount.value = Math.floor(buttonValue);
+    buttonCount.value = buttonValue;
   }, 16);
 }
 
-buttonUp.addEventListener('pointerdown', () => startIncrement(true));
-buttonUp.addEventListener('pointerup', stopIncrement);
-buttonUp.addEventListener('pointerleave', stopIncrement);
+function onPointerDown(e, isUp) {
+  e.preventDefault();
+  const startTime = Date.now();
+  
+  const timer = setTimeout(() => {
+    handleHold(isUp);
+  }, 200);
+  
+  function onPointerUp() {
+    clearTimeout(timer);
+    if (Date.now() - startTime < 200) {
+      handleTap(isUp);
+    }
+    clearInterval(holdInterval);
+    isHolding = false;
+    
+    document.removeEventListener('pointerup', onPointerUp);
+    document.removeEventListener('pointercancel', onPointerUp);
+  }
+  
+  document.addEventListener('pointerup', onPointerUp);
+  document.addEventListener('pointercancel', onPointerUp);
+}
 
-buttonDown.addEventListener('pointerdown', () => startIncrement(false));
-buttonDown.addEventListener('pointerleave', stopIncrement);
-buttonDown.addEventListener('pointerup', stopIncrement);
+buttonUp.addEventListener('pointerdown', (e) => onPointerDown(e, true));
+buttonDown.addEventListener('pointerdown', (e) => onPointerDown(e, false));

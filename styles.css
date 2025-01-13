@@ -128,7 +128,8 @@ input {
 
 .button-counter-wrapper input {
   overflow: hidden;
-  padding-right: 40px; /* Make room for buttons */
+  padding-right: 35px; /* Make room for buttons */
+  padding-left: 8px;
 }
 
 .button-controls {
@@ -154,6 +155,14 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  &:hover {
+    background: #f7f8f9;
+  }
+
+  &:active {
+    background: #e9f0f8;
+  }
 }
 
 .button-chevron-up {
