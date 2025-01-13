@@ -6,13 +6,13 @@
     <title>Scroll Counter</title>
     <link rel="stylesheet" href="styles.css" />
     <script defer src="input-scroll.js"></script>
-    <script defer src="input-chevron.js"></script>
     <script defer src="input-buttons.js"></script>
+    <script defer src="input-split.js"></script>
   </head>
   <body>
     <div class="flex">
       <div class="counter-container">
-        <input type="text" id="scrollCount" value="0" readonly />
+        <input class="input" type="text" id="scrollCount" value="0" />
         <div style="position: relative">
           <div id="upperBound" class="drag-indicator"></div>
           <svg id="scrollButton" class="scroll-button" alt="Scroll button" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,31 +24,35 @@
         </div>
       </div>
 
-      <div class="chevron-counter-container">
-        <input type="text" id="chevronCount" value="0" readonly />
-        <svg class="chevron chevron-up" viewBox="0 0 24 24">
-          <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
-        </svg>
-        <svg class="chevron chevron-down" viewBox="0 0 24 24">
-          <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
-        </svg>
+      <div class="button-counter-container">
+        <input class="input input__increment-buttons" type="text" id="buttonCount" value="0" />
+        <div class="button-controls">
+          <button class="button-chevron button-chevron-up button-up">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+            </svg>
+          </button>
+          <button class="button-chevron button-chevron-down button-down">
+            <svg viewBox="0 0 24 24" width="16" height="16" style="transform: rotate(180deg)">
+              <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <div class="button-counter-container">
-        <div class="button-counter-wrapper">
-          <input type="text" id="buttonCount" value="0" readonly />
-          <div class="button-controls">
-            <button class="button-chevron button-chevron-up button-up">
-              <svg viewBox="0 0 24 24" width="16" height="16">
-                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
-              </svg>
-            </button>
-            <button class="button-chevron button-chevron-down button-down">
-              <svg viewBox="0 0 24 24" width="16" height="16" style="transform: rotate(180deg)">
-                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
-              </svg>
-            </button>
-          </div>
+      <div class="split-button-counter-container">
+        <div class="split-button-wrapper">
+          <button class="split-button split-button-down split-down">
+            <svg viewBox="0 0 24 24" width="16" height="16" style="transform: rotate(180deg)">
+              <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+            </svg>
+          </button>
+          <input type="text" id="splitCount" value="0" class="input input__split-buttons" readonly />
+          <button class="split-button split-button-up split-up">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+            </svg>
+          </button>
         </div>
       </div>
     </div>

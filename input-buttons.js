@@ -19,6 +19,9 @@ function getAcceleration(holdTime) {
 }
 
 function handleTap(isUp) {
+  // Get current input value first
+  buttonValue = parseInt(buttonCount.value) || 0;
+  
   if (isUp) {
     buttonValue++;
   } else {
@@ -28,6 +31,8 @@ function handleTap(isUp) {
 }
 
 function handleHold(isUp) {
+  // Get current input value first
+  buttonValue = parseInt(buttonCount.value) || 0;
   isHolding = true;
   holdStartTime = Date.now();
   
