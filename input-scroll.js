@@ -1,39 +1,39 @@
 // Shared Constants
 const MAX_DRAG_DISTANCE = 80;
 
-const button = document.getElementById("scrollButton");
 const scrollInput = document.getElementById("scrollCount");
-const upperBound = document.getElementById("upperBound");
-const lowerBound = document.getElementById("lowerBound");
-const arrowUp = document.querySelector(".scroll-icon__arrow-up");
-const arrowDown = document.querySelector(".scroll-icon__arrow-down");
-const circle = document.querySelector(".scroll-icon__circle");
+const scrollButton = document.getElementById("scrollButton");
+const scrollUpperBound = document.getElementById("upperBound");
+const scrollLowerBound = document.getElementById("lowerBound");
+const scrollArrowUp = document.querySelector(".scroll-icon__arrow-up");
+const scrollArrowDown = document.querySelector(".scroll-icon__arrow-down");
+const scrollCircle = document.querySelector(".scroll-icon__circle");
 
 // Add click handlers for arrows
-arrowUp.addEventListener('click', (e) => {
+scrollArrowUp.addEventListener('click', (e) => {
   e.stopPropagation(); // Prevent triggering drag
-  count = parseInt(scrollInput.value) || 0;
-  count++;
-  scrollInput.value = count;
+  scrollCount = parseInt(scrollInput.value) || 0;
+  scrollCount++;
+  scrollInput.value = scrollCount;
 });
 
-arrowDown.addEventListener('click', (e) => {
+scrollArrowDown.addEventListener('click', (e) => {
   e.stopPropagation(); // Prevent triggering drag
-  count = parseInt(scrollInput.value) || 0;
-  count = Math.max(0, count - 1);
-  scrollInput.value = count;
+  scrollCount = parseInt(scrollInput.value) || 0;
+  scrollCount = Math.max(0, scrollCount - 1);
+  scrollInput.value = scrollCount;
 });
 
 // State
-let count = 0;
-let startY = 0;
-let currentY = 0;
-let isActive = false;
-let animationFrameId;
-let holdStartTime;
+let scrollCount = 0;
+let scrollStartY = 0;
+let scrollCurrentY = 0;
+let scrollIsActive = false;
+let scrollAnimationFrameId;
+let scrollHoldStartTime;
 
 // Set circle initial state
-circle.style.transform = "translateY(0)";
+scrollCircle.style.transform = "translateY(0)";
 
 // Event listeners
 function getClientY(e) {
@@ -41,60 +41,60 @@ function getClientY(e) {
 }
 
 function handleStart(e) {
-  isActive = true;
-  startY = getClientY(e);
-  currentY = startY;
-  holdStartTime = Date.now();
-  upperBound.classList.add("active");
-  lowerBound.classList.add("active");
+  scrollIsActive = true;
+  scrollStartY = getClientY(e);
+  scrollCurrentY = scrollStartY;
+  scrollHoldStartTime = Date.now();
+  scrollUpperBound.classList.add("active");
+  scrollLowerBound.classList.add("active");
   updateCount();
 }
 
 function handleMove(e) {
-  if (!isActive) return;
+  if (!scrollIsActive) return;
   e.preventDefault();
-  currentY = getClientY(e);
+  scrollCurrentY = getClientY(e);
 
-  if (currentY < startY) {
-    arrowDown.style.opacity = "0";
-    arrowUp.style.opacity = "1";
-    circle.style.transform = "translateY(-1px)";
+  if (scrollCurrentY < scrollStartY) {
+    scrollArrowDown.style.opacity = "0";
+    scrollArrowUp.style.opacity = "1";
+    scrollCircle.style.transform = "translateY(-1px)";
   } else {
-    arrowUp.style.opacity = "0";
-    arrowDown.style.opacity = "1";
-    circle.style.transform = "translateY(1px)";
+    scrollArrowUp.style.opacity = "0";
+    scrollArrowDown.style.opacity = "1";
+    scrollCircle.style.transform = "translateY(1px)";
   }
 }
 
 function handleEnd() {
-  isActive = false;
-  cancelAnimationFrame(animationFrameId);
-  upperBound.classList.remove("active");
-  lowerBound.classList.remove("active");
-  arrowUp.style.opacity = "1";
-  arrowDown.style.opacity = "1";
-  circle.style.transform = "translateY(0)";
+  scrollIsActive = false;
+  cancelAnimationFrame(scrollAnimationFrameId);
+  scrollUpperBound.classList.remove("active");
+  scrollLowerBound.classList.remove("active");
+  scrollArrowUp.style.opacity = "1";
+  scrollArrowDown.style.opacity = "1";
+  scrollCircle.style.transform = "translateY(0)";
 }
 
 // Mouse Events
-button.addEventListener("mousedown", handleStart);
+scrollButton.addEventListener("mousedown", handleStart);
 document.addEventListener("mousemove", handleMove);
 document.addEventListener("mouseup", handleEnd);
 
 // Touch Events
-button.addEventListener("touchstart", handleStart);
-button.addEventListener("touchmove", handleMove);
-button.addEventListener("touchend", handleEnd);
-button.addEventListener("touchcancel", handleEnd);
+scrollButton.addEventListener("touchstart", handleStart);
+scrollButton.addEventListener("touchmove", handleMove);
+scrollButton.addEventListener("touchend", handleEnd);
+scrollButton.addEventListener("touchcancel", handleEnd);
 
 // Prevent unwanted behaviors
-button.addEventListener("dragstart", (e) => e.preventDefault());
+scrollButton.addEventListener("dragstart", (e) => e.preventDefault());
 
 function updateCount() {
-  if (!isActive) return;
+  if (!scrollIsActive) return;
 
-  const distance = Math.abs(currentY - startY);
-  const direction = startY > currentY ? 1 : -1;
+  const distance = Math.abs(scrollCurrentY - scrollStartY);
+  const direction = scrollStartY > scrollCurrentY ? 1 : -1;
   const clampedDistance = Math.min(distance, MAX_DRAG_DISTANCE);
 
   let accelerationFactor;
@@ -122,11 +122,11 @@ function updateCount() {
   const increment = accelerationFactor * 30;
 
   if (direction > 0) {
-    count += increment;
+    scrollCount += increment;
   } else {
-    count = Math.max(0, count - increment);
+    scrollCount = Math.max(0, scrollCount - increment);
   }
 
-  scrollInput.value = Math.floor(count);
-  animationFrameId = requestAnimationFrame(updateCount);
+  scrollInput.value = Math.floor(scrollCount);
+  scrollAnimationFrameId = requestAnimationFrame(updateCount);
 }

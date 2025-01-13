@@ -1,9 +1,13 @@
-const buttonCount = document.getElementById("buttonCount");
-const buttonUp = document.querySelector(".button-up");
-const buttonDown = document.querySelector(".button-down");
+const buttonInput = document.getElementById("buttonCount");
+const buttonUpControl = document.querySelector(".button-up");
+const buttonDownControl = document.querySelector(".button-down");
+
 let buttonValue = 0;
-let holdStartTime = 0;
-let holdInterval;
+let buttonHoldStartTime = 0;
+let buttonHoldInterval;
+let buttonIsHolding = false;
+let lastTapTime = 0;
+let holdTimer = null;
 let isHolding = false;
 
 function getAcceleration(holdTime) {
@@ -19,25 +23,22 @@ function getAcceleration(holdTime) {
 }
 
 function handleTap(isUp) {
-  // Get current input value first
-  buttonValue = parseInt(buttonCount.value) || 0;
-  
+  buttonValue = parseInt(buttonInput.value) || 0;
   if (isUp) {
     buttonValue++;
   } else {
     buttonValue = Math.max(0, buttonValue - 1);
   }
-  buttonCount.value = buttonValue;
+  buttonInput.value = buttonValue;
 }
 
 function handleHold(isUp) {
-  // Get current input value first
-  buttonValue = parseInt(buttonCount.value) || 0;
+  if (isHolding) return;
   isHolding = true;
-  holdStartTime = Date.now();
+  buttonValue = parseInt(buttonInput.value) || 0;
   
-  holdInterval = setInterval(() => {
-    const holdTime = Date.now() - holdStartTime;
+  buttonHoldInterval = setInterval(() => {
+    const holdTime = Date.now() - buttonHoldStartTime;
     const increment = getAcceleration(holdTime);
     
     if (isUp) {
@@ -45,26 +46,29 @@ function handleHold(isUp) {
     } else {
       buttonValue = Math.floor(Math.max(0, buttonValue - increment));
     }
-    
-    buttonCount.value = buttonValue;
+    buttonInput.value = buttonValue;
   }, 16);
 }
 
 function onPointerDown(e, isUp) {
   e.preventDefault();
-  const startTime = Date.now();
+  buttonHoldStartTime = Date.now();
   
-  const timer = setTimeout(() => {
+  // Clear any existing timers
+  clearTimeout(holdTimer);
+  clearInterval(buttonHoldInterval);
+  
+  holdTimer = setTimeout(() => {
     handleHold(isUp);
-  }, 200);
+  }, 300);
   
   function onPointerUp() {
-    clearTimeout(timer);
-    if (Date.now() - startTime < 200) {
+    clearTimeout(holdTimer);
+    if (!isHolding) {
       handleTap(isUp);
     }
-    clearInterval(holdInterval);
     isHolding = false;
+    clearInterval(buttonHoldInterval);
     
     document.removeEventListener('pointerup', onPointerUp);
     document.removeEventListener('pointercancel', onPointerUp);
@@ -74,5 +78,8 @@ function onPointerDown(e, isUp) {
   document.addEventListener('pointercancel', onPointerUp);
 }
 
-buttonUp.addEventListener('pointerdown', (e) => onPointerDown(e, true));
-buttonDown.addEventListener('pointerdown', (e) => onPointerDown(e, false));
+// Event Listeners
+buttonUpControl.addEventListener('pointerdown', (e) => onPointerDown(e, true));
+buttonDownControl.addEventListener('pointerdown', (e) => onPointerDown(e, false));
+buttonUpControl.addEventListener('contextmenu', (e) => e.preventDefault());
+buttonDownControl.addEventListener('contextmenu', (e) => e.preventDefault());

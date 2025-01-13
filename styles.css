@@ -24,6 +24,16 @@ body {
   padding-left: 8px;
 }
 
+.input__scroll-buttons {
+
+}
+
+.scroll-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .input__increment-buttons {
   border-radius: 4px 0 0 4px;
 }
@@ -36,9 +46,7 @@ body {
 
 .counter-container {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0;
+  width: fit-content;
 }
 
 .scroll-button {

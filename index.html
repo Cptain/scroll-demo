@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scroll Counter</title>
     <link rel="stylesheet" href="styles.css" />
+    <script defer src="input-split.js"></script>
     <script defer src="input-scroll.js"></script>
     <script defer src="input-buttons.js"></script>
-    <script defer src="input-split.js"></script>
   </head>
   <body>
     <div class="flex">
       <div class="counter-container">
-        <input class="input" type="text" id="scrollCount" value="0" />
-        <div style="position: relative">
+        <input class="input input__scroll-button" type="text" id="scrollCount" value="0" />
+        <div class="scroll-container">
           <div id="upperBound" class="drag-indicator"></div>
           <svg id="scrollButton" class="scroll-button" alt="Scroll button" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle class="scroll-icon__circle" cx="12" cy="12" r="5" transform="rotate(90 12 12)" fill="#1E75DF" />
