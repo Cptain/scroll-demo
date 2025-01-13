@@ -114,9 +114,9 @@ function updateCount() {
     accelerationFactor = 0.03 + Math.pow(zoneProgress, 2) * 0.04;
   }
   else {
-    // Zone 4: 6x faster than Zone 3 (70-80px)
+    // Zone 4: 20x faster than Zone 3 (70-80px)
     const zoneProgress = (clampedDistance - 70) / 10;
-    accelerationFactor = 0.07 + Math.pow(zoneProgress, 2) * 0.24;
+    accelerationFactor = 0.07 + Math.pow(zoneProgress, 2) * 0.8;
   }
 
   const increment = accelerationFactor * 30;
